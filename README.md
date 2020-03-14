@@ -106,4 +106,6 @@ The main files the project contains that can be updated to change the code behav
 
 * src/apps/LoRaMac/classA/B-L072Z-LRWAN1/**Commissioning.h**: file where the device keys, address and activation mode (ABP or OTAA) can be configured.
 
-* src/boards/B-L072Z-LRWAN1/**board.c**: hardware interfaces and peripherals initializtion.
+* src/boards/B-L072Z-LRWAN1/**board.c**: hardware interfaces and peripherals initialization.
+
+* src/apps/LoRaMac/classA/B-L072Z-LRWAN1/**tools.c** : hardware interfaces and peripherals initialization (HTS221 and LPS22HB).

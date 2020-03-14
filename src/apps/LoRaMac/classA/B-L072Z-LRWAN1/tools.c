@@ -239,6 +239,7 @@ uint8_t HTS221_begin(){
 	}
 	printf("\nDispositivo HTS221 conectado!!!\n");
 	HTS221_Read_Calibration();		
+	WriteI2cSW_8bits(HTS221_ADDRESS, HTS221_CTRL1,0x85);		
 	return 1;
 }
 

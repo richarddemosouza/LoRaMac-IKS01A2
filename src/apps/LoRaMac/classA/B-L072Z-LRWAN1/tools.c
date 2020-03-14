@@ -294,6 +294,8 @@ uint8_t LPS22HB_begin(){
 		printf("\nDispositivo LPS22HB desconectado!!!\n");
 		return 0;
 	}
+	WriteI2cSW_8bits(LPS22HB_ADDRESS,LPS22HB_RES_CONF,0x01);
+	WriteI2cSW_8bits(LPS22HB_ADDRESS,LPS22HB_CTRL_REG1,0x32);
 	printf("\nDispositivo LPS22HB conectado!!!\n");	
 	return 1;
 }

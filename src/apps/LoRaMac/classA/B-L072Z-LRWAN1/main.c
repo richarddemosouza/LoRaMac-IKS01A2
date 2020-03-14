@@ -356,22 +356,21 @@ static void PrepareTxFrame( uint8_t port )
     {
     case 2:
         {
-			uint16_t temperature=HTS221_Temperature_Hex();
-			uint16_t humidity=HTS221_Humidity_Hex();
-			uint32_t pressure=LPS22HB_Pressure_Hex();
+			float temperature=HTS221_Temperature(CELSIUS);
+			float humidity=HTS221_Humidity();
+			float pressure=LPS22HB_Pressure();
             // Random sensores values based on X-NUCLEO-IKS01A2 board
-            AppDataSizeBackup = AppDataSize = 8;           
+            AppDataSizeBackup = AppDataSize = 7;           
             
-            AppDataBuffer[0] = temperature >> 8;
-            AppDataBuffer[1] = temperature;
+            AppDataBuffer[0] = (int)temperature;
+            AppDataBuffer[1] = (int)((temperature-AppDataBuffer[0])*10);
 
-            AppDataBuffer[2] = humidity >> 8;
-            AppDataBuffer[3] = humidity;                        
+            AppDataBuffer[2] = (int)humidity ;
+            AppDataBuffer[3] = (int)((humidity-AppDataBuffer[2])*10);                        
                         
-            AppDataBuffer[4] = pressure >> 24;
-            AppDataBuffer[5] = pressure >> 16;
-            AppDataBuffer[6] = pressure >> 8;
-            AppDataBuffer[7] = pressure;
+            AppDataBuffer[4] = (int)(pressure/100);
+            AppDataBuffer[5] = (int)(pressure-(AppDataBuffer[4]*100));
+            AppDataBuffer[6] = (int)((pressure-(int)(pressure))*10);            
         }
         break;
     case 224:

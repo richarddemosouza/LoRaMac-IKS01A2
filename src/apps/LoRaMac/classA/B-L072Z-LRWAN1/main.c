@@ -356,24 +356,22 @@ static void PrepareTxFrame( uint8_t port )
     {
     case 2:
         {
+			uint16_t temperature=HTS221_Temperature_Hex();
+			uint16_t humidity=HTS221_Humidity_Hex();
+			uint32_t pressure=LPS22HB_Pressure_Hex();
             // Random sensores values based on X-NUCLEO-IKS01A2 board
-            AppDataSizeBackup = AppDataSize = 6;
-
-            AppDataBuffer[0] = 0x5A; // Device type
-
-            uint16_t temperature = randr( 223, 324 ); // in Kelvin
-            AppDataBuffer[1] = temperature >> 8;
-            AppDataBuffer[2] = temperature & 0xFF;
-
-            AppDataBuffer[3] = randr( 0, 100 ); // humidity in percent %
+            AppDataSizeBackup = AppDataSize = 8;           
             
-            uint16_t pressure = randr( 260, 1260 ); // in hPa
-            AppDataBuffer[4] = pressure >> 8;
-            AppDataBuffer[5] = pressure & 0xFF;
+            AppDataBuffer[0] = temperature >> 8;
+            AppDataBuffer[1] = temperature;
 
-            // AppDataBuffer[6] = 0x41; // accelerometer
-            // AppDataBuffer[7] = 0x41; // magnetometer
-            // AppDataBuffer[8] = 0x41; // gyroscope
+            AppDataBuffer[2] = humidity >> 8;
+            AppDataBuffer[3] = humidity;                        
+                        
+            AppDataBuffer[4] = pressure >> 24;
+            AppDataBuffer[5] = pressure >> 16;
+            AppDataBuffer[6] = pressure >> 8;
+            AppDataBuffer[7] = pressure;
         }
         break;
     case 224:
@@ -560,19 +558,27 @@ static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
     mibReq.Type = MIB_DEVICE_CLASS;
     LoRaMacMibGetRequestConfirm( &mibReq );
 
-    printf( "\r\n###### ===== UPLINK FRAME %lu ==== ######\r\n", mcpsConfirm->UpLinkCounter );
-    printf( "\r\n" );
+    printf( "\r\n###### ===== UPLINK FRAME %lu ==== ######\r\n", mcpsConfirm->UpLinkCounter );    
     
-    //printf("\n************HTS221 Temperatura %X **************\n",HTS221_Temp());	
-    //printf("\n************HTS221 Umidade %X **************\n",HTS221_Humid());	
-    printf("\n************HTS221 Temperatura ");
-    printDouble(LPS22HB_Temp() * _hts221TemperatureSlope + _hts221TemperatureZero,2);	
-    printf(" **************\n");
-    printf("\n************LPS22HB Pressao ");
-    double rasc=LPS22HB_Press()/4096.0;
-    printDouble(rasc,2);
-    printf(" **************\n");	
-
+    //************************************************************************
+    //Leitura da temperatura em graus CELSIUS ou FAHRENHEIT
+    float rasc=HTS221_Temperature(CELSIUS);    
+    printf("\nTemperatura = ");
+	printDouble(rasc,1);	
+	//************************************************************************
+	//Leitura da umidade relativa (%)
+	rasc=HTS221_Humidity();
+	printf("    Umidade = ");
+	printDouble(rasc,1);
+	printf("%%");   	
+	//************************************************************************
+	//Leitura de pressão atmosférica em hPa
+	rasc=LPS22HB_Pressure();
+	printf("    Pressao = ");
+	printDouble(rasc,1);
+	printf(" hPa\r\n");   	
+	//************************************************************************	 
+		
     printf( "CLASS        : %c\r\n", "ABC"[mibReq.Param.Class] );
     // printf( "\r\n" );
     printf( "TX PORT     : %d\r\n", AppData.Port );
@@ -1030,7 +1036,7 @@ void lora_set_sub_band(uint8_t subBand) {
 /**
  * Callback called when user button (blue) is pressed.
  */
-void onPressedButton() {
+void onPressedButton() {	
     DeviceState = DEVICE_STATE_SEND;
     NextTx = true;
 }
@@ -1065,17 +1071,19 @@ int main( void )
     macCallbacks.GetTemperatureLevel = NULL;
     macCallbacks.NvmContextChange = NvmCtxMgmtEvent;
     macCallbacks.MacProcessNotify = OnMacProcessNotify;
-
+    
+    
     LoRaMacInitialization( &macPrimitives, &macCallbacks, ACTIVE_REGION );
 
     DeviceState = DEVICE_STATE_RESTORE;    
+        
+    printf( "###### EELXXXX - IoT LoRa ###### \r\n\r\n");  
     
+    HTS221_begin();
     
-    printf( "###### EELXXXX - IoT LoRa ###### \r\n\r\n");
-    
-    if (HTS221_Init()) printf("\nHTS221 conectado!!!\n");	
-    if (LPS22HB_Init()) printf("\nLPS22HB conectado!!!\n");	
-
+    LPS22HB_begin();
+	
+       
     while( 1 )
     {
         // Process Radio IRQ

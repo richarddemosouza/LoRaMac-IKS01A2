@@ -131,7 +131,7 @@
  *         BoardUniqueId value if LORAWAN_DEVICE_ADDRESS is set to 0
  */
  
-#define LORAWAN_DEVICE_ADDRESS                             ( uint32_t )0x2603128D
+#define LORAWAN_DEVICE_ADDRESS                             ( uint32_t )0x26062303
 
 /*!
  * Forwarding Network session integrity key

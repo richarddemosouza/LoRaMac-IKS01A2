@@ -30,6 +30,7 @@
 #include "utilities.h"
 #include "board.h"
 #include "gpio.h"
+#include "adc.h"
 #include "LoRaMac.h"
 #include "Commissioning.h"
 #include "NvmCtxMgmt.h"
@@ -236,6 +237,11 @@ extern Gpio_t Led3; // Rx
 extern Gpio_t Led4; // App
 
 /*!
+ * Entrada analógica
+ */
+Adc_t AnalogIn_PA_0;
+
+/*!
  * MAC status strings
  */
 const char* MacStatusStrings[] =
@@ -356,12 +362,16 @@ static void PrepareTxFrame( uint8_t port )
     {
     case 2:
         {
+			//********* Preparando o pacote para o envio ***********//
 			float temperature=HTS221_Temperature(CELSIUS);
 			float humidity=HTS221_Humidity();
 			float pressure=LPS22HB_Pressure();
-            // Random sensores values based on X-NUCLEO-IKS01A2 board
-            AppDataSizeBackup = AppDataSize = 7;           
+            float volts= (float)(AdcReadChannel(&AnalogIn_PA_0, 1 )/100.0);        
             
+            //********* Determina o tamanho do pacote *************//
+            AppDataSizeBackup = AppDataSize = 9;           
+            
+            //************* Configura o pacote ********************//
             AppDataBuffer[0] = (int)temperature;
             AppDataBuffer[1] = (int)((temperature-AppDataBuffer[0])*10);
 
@@ -370,7 +380,11 @@ static void PrepareTxFrame( uint8_t port )
                         
             AppDataBuffer[4] = (int)(pressure/100);
             AppDataBuffer[5] = (int)(pressure-(AppDataBuffer[4]*100));
-            AppDataBuffer[6] = (int)((pressure-(int)(pressure))*10);            
+            AppDataBuffer[6] = (int)((pressure-(int)(pressure))*10);    
+            
+            AppDataBuffer[7] = (int)volts;
+            AppDataBuffer[8] = (int)((volts-AppDataBuffer[7])*10);
+            //******************************************************//
         }
         break;
     case 224:
@@ -575,8 +589,14 @@ static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 	rasc=LPS22HB_Pressure();
 	printf("    Pressao = ");
 	printDouble(rasc,1);
-	printf(" hPa\r\n");   	
-	//************************************************************************	 
+	printf(" hPa");   	
+	//************************************************************************	
+	 //Leitura da tensão em Volts
+	uint16_t volts=AdcReadChannel(&AnalogIn_PA_0, 1 );
+	printf("    Tensao = ");
+	printDouble((float)(volts/100),2);
+	printf(" V\r\n");   	
+	//************************************************************************	
 		
     printf( "CLASS        : %c\r\n", "ABC"[mibReq.Param.Class] );
     // printf( "\r\n" );
@@ -1074,13 +1094,19 @@ int main( void )
     
     LoRaMacInitialization( &macPrimitives, &macCallbacks, ACTIVE_REGION );
 
-    DeviceState = DEVICE_STATE_RESTORE;    
-        
-    printf( "###### EELXXXX - IoT LoRa ###### \r\n\r\n");  
+    DeviceState = DEVICE_STATE_RESTORE;   
+    
+    //************  Inicia os sensores **************//
+    
+    AdcInit( &AnalogIn_PA_0, PA_0);
     
     HTS221_begin();
     
     LPS22HB_begin();
+    
+    //***********************************************// 
+        
+    printf( "###### EELXXXX - IoT LoRa ###### \r\n\r\n");  
 	
        
     while( 1 )

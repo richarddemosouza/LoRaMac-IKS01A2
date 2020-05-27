@@ -37,6 +37,7 @@
 #include "LoRaMacTest.h"
 #include "delay.h"
 
+#if LORAWAN_CONFIG_MANUAL 
 /*!
  * Defines the application data transmission duty cycle. Value in [ms].
  */
@@ -79,6 +80,7 @@
  * LoRaWAN ETSI duty cycle control enable/disable
  */
 #define LORAWAN_DUTYCYCLE_ON         false
+#endif
 
 static uint8_t DevEui[] = LORAWAN_DEVICE_EUI;
 static uint8_t JoinEui[] = LORAWAN_JOIN_EUI;

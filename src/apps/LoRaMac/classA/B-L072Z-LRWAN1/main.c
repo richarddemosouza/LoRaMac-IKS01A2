@@ -37,7 +37,7 @@
 #include "LoRaMacTest.h"
 #include "delay.h"
 
-#if LORAWAN_CONFIG_MANUAL 
+#if LORAWAN_CONFIG_MANUAL==true 
 /*!
  * Defines the application data transmission duty cycle. Value in [ms].
  */

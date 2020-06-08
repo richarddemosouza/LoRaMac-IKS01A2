@@ -1,6 +1,7 @@
 //Create by software LoraMac
 #ifndef __LORA_COMMISSIONING_H__
 #define __LORA_COMMISSIONING_H__
+#define OVER_THE_AIR_ACTIVATION                            0
 #define ABP_ACTIVATION_LRWAN_VERSION_V10x                  0x01000300
 #define ABP_ACTIVATION_LRWAN_VERSION                       ABP_ACTIVATION_LRWAN_VERSION_V10x
 #define LORAWAN_PUBLIC_NETWORK                             true

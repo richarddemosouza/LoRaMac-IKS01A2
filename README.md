@@ -1,6 +1,6 @@
-## EELXXXX - IoT LoRa
+## EEL7415/7515 - IoT LoRa
 
-This branch contains the firmware of EELXXXX discipline. The LoRaWAN stack version used is the [1.0.3](https://lora-alliance.org/sites/default/files/2018-07/lorawan1.0.3.pdf), which can be obtained in the [LoRa-Mac node](https://github.com/Lora-net/LoRaMac-node/) project. The buid system is composed by CMake and the GNU ARM-Toolchain.
+This branch contains the firmware for EEL7415/7515 courses. The LoRaWAN stack version is [1.0.3](https://lora-alliance.org/sites/default/files/2018-07/lorawan1.0.3.pdf), which can be obtained in the [LoRa-Mac node](https://github.com/Lora-net/LoRaMac-node/) project. The buid system is composed by CMake and the GNU ARM-Toolchain.
 
 #### Folders structure
 

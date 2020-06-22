@@ -1108,7 +1108,7 @@ int main( void )
     
     //***********************************************// 
         
-    printf( "###### EELXXXX - IoT LoRa ###### \r\n\r\n");  
+    printf( "###### EEL7415/7515 - RSSF - IoT - LoRaWAN ###### \r\n\r\n");  
 	
        
     while( 1 )

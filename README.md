@@ -1,12 +1,9 @@
 ## EEL7415/7515 - IoT LoRa
 
-This branch contains the firmware for EEL7415/7515 courses. The LoRaWAN stack version is [1.0.3](https://lora-alliance.org/sites/default/files/2018-07/lorawan1.0.3.pdf), which can be obtained in the [LoRa-Mac node](https://github.com/Lora-net/LoRaMac-node/) project. The buid system is composed by CMake and the GNU ARM-Toolchain.
+This branch contains the firmware for EEL7415/7515 courses. The LoRaWAN stack version is [1.0.3](https://lora-alliance.org/sites/default/files/2018-07/lorawan1.0.3.pdf), which can be obtained in the [LoRa-Mac node](https://github.com/Lora-net/LoRaMac-node/) project. The build system is composed by CMake and GNU ARM-Toolchain.
 
 #### Folders structure
 
-The folders structure used in the project is:
-
-    .
     ├── cmake                   # CMAKE generation files.
         ├── stm32l0.cmake       # File that contains the compilation flags.
     ├── Docs                    # Boards schematics and usefull commands.
@@ -23,7 +20,7 @@ Each `src/` subfolder contains a `CMakeLists.txt` file, where it is specified wh
 
 #### Prerequisites
 
-It is highly recommended to use Linux Ubuntu version 18.xx or 19.xx to compile the project.
+It is highly recommended to use Linux Ubuntu version 18+ to compile the project.
 
 * **CMake >= 3.6**
 
@@ -55,8 +52,6 @@ $ cmake -DCMAKE_TOOLCHAIN_FILE="cmake/toolchain-arm-none-eabi.cmake" -DAPPLICATI
 ```
 There is the possibility to choose the application, target board and other options using some parameters when executing the CMake through command line.
 
-Parameters available:
-
 | Parameter          | Possible values |
 | -------------      | :-------------|
 | `APPLICATION`      | **LoRaMac** |
@@ -77,7 +72,7 @@ The binary file will be located in ```src/apps/LoRaMac/LoRaMac-classA.bin```. To
 
 To upload the firmware to the board, just copy the binary file to the USB device created when the B-L072Z-LRWAN1 is connected to the computer.
 
-Using command line, this can the perform, inside the `build/` folder, as:
+Using command line, this can be performed in the `build/` folder as:
 
 ```sh
 $ cp src/apps/LoRaMac/LoRaMac-classA.bin /media/$your-user-name$/DIS_L072Z/
@@ -85,7 +80,7 @@ $ cp src/apps/LoRaMac/LoRaMac-classA.bin /media/$your-user-name$/DIS_L072Z/
 
 #### Visualizing the messages through Serial
 
-The UART interface of the board is used to debug with prints. To access this interface, install the `Cutecom` program:
+The UART interface is used to debug with prints. To access this interface, install the `Cutecom` program:
 
 ```sh
 $ sudo apt-get install cutecom
@@ -96,16 +91,16 @@ To open the software:
 ```sh
 $ sudo cutecom
 ```
-The baudrate should be configured as 115200.
+The baudrate should be configured as 115200 bps.
 
 #### Updating the code
 
-The main files the project contains that can be updated to change the code behavior, implement new functionalities or features are:
+The most relevant files are:
 
-* src/apps/LoRaMac/classA/B-L072Z-LRWAN1/**main.c**: project main application. This file contains some `#define` that can be used to change some configuration of the device. Not only this, but also has the functions of LoRaWAN parameters configuration, payload creation, stack callbacks and a FSM to handle the project routines.
+* src/apps/LoRaMac/classA/B-L072Z-LRWAN1/**main.c**: project main application. This file contains some `#define` that can be used to change some device configurations. It also has the functions of LoRaWAN parameters configuration, payload creation, stack callbacks and a FSM to handle the project routines.
 
 * src/apps/LoRaMac/classA/B-L072Z-LRWAN1/**Commissioning.h**: file where the device keys, address and activation mode (ABP or OTAA) can be configured.
 
 * src/boards/B-L072Z-LRWAN1/**board.c**: hardware interfaces and peripherals initializtion.
 
-* src/apps/LoRaMac/classA/B-L072Z-LRWAN1/**tools.c**: hardware interfaces and peripherals initializtion (HTS221 and LPS22HB).
+* src/apps/LoRaMac/classA/B-L072Z-LRWAN1/**tools.c**: hardware interfaces and peripherals initialization (HTS221 and LPS22HB).

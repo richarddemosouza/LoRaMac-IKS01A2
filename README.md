@@ -16,7 +16,7 @@ This branch contains the firmware for EEL7415/7515 courses. The LoRaWAN stack ve
         ├── system              # Peripherals abstraction functions, used in main application.
     └── ...
 
-Each `src/` subfolder contains a `CMakeLists.txt` file, where it is specified what C files should be compiled and auxiliary directories paths are included. When adding a new file, it is necessary to update the correspondet CMake file.
+Each `src/` subfolder contains a `CMakeLists.txt` file, where it is specified what C files should be compiled and auxiliary directories paths are included. When adding a new file, it is necessary to update the corresponding CMake file.
 
 #### Prerequisites
 
